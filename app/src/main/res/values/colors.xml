@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fondo">#030303</color>
+    <color name="transparente">#00000000</color>
+    <color name="fuente_logo">#F9F8F8</color>
+    <color name="terminos_condiciones">#6F6F6F</color>
+    <color name="color_iconos_inicio">#A0A0A0</color>
+    <color name="letra_publicacion">#737373</color>
+
+
+
+</resources>
