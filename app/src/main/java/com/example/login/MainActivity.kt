@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         val  correo = binding.email.text.toString()
         val  contrasena = binding.contrasena.text.toString()
         if (correo.isEmpty()) {
-            Toast.makeText(this, "El campo de correo está vacío.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "El campo de correo está vacío. Por favor digite su correo.", Toast.LENGTH_SHORT).show()
         } else if (contrasena.isEmpty()) {
             Toast.makeText(this, "El campo de contraseña está vacío.", Toast.LENGTH_SHORT).show()
         } else {
