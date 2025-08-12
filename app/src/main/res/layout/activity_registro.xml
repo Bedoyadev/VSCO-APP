@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/fondo"
+    >
+
+    <ImageButton
+        android:id="@+id/retroceso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/fondo"
+        android:contentDescription="@string/devolver"
+        android:src="@drawable/cancelar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck,ImageContrastCheck" />
+
+    <TextView
+        android:id="@+id/texto_registro"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/Registro"
+        android:fontFamily="@font/logo_fuente"
+        android:text="@string/Registro"
+        android:textColor="@color/fuente_logo"
+        android:textSize="25sp"
+        app:layout_constraintStart_toEndOf="@id/retroceso"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextSizeCheck" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/correo_electronico1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/campo_digitar"
+        android:layout_marginEnd="25dp"
+        android:textColor="@color/fondo"
+        android:layout_marginTop="60dp"
+        android:textColorHint="@color/fuente_logo"
+        android:fontFamily="@font/inputs_fuente"
+        app:layout_constraintTop_toBottomOf="@id/texto_registro">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:background="@drawable/campo_digitar"
+            android:fontFamily="@font/inputs_fuente"
+            android:hint="@string/correo_electronico"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/fuente_logo"
+            android:textColorHint="@color/fuente_logo" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nombre_perfil"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/campo_digitar"
+        android:layout_marginEnd="25dp"
+        android:textColor="@color/fondo"
+        android:layout_marginTop="30dp"
+        android:textColorHint="@color/fuente_logo"
+        android:fontFamily="@font/inputs_fuente"
+        app:layout_constraintTop_toBottomOf="@id/correo_electronico1">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nom_perfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:background="@drawable/campo_digitar"
+            android:fontFamily="@font/inputs_fuente"
+            android:hint="@string/nombre_perfil"
+            android:inputType="text"
+            android:textColor="@color/fuente_logo"
+            android:textColorHint="@color/fuente_logo" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ccontrasena2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/campo_digitar"
+        android:layout_marginEnd="25dp"
+        app:endIconMode="password_toggle"
+        android:textColor="@color/fondo"
+        android:layout_marginTop="30dp"
+        android:textColorHint="@color/fuente_logo"
+        android:fontFamily="@font/inputs_fuente"
+        app:layout_constraintTop_toBottomOf="@id/nombre_perfil">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/contra2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:background="@drawable/campo_digitar"
+            android:fontFamily="@font/inputs_fuente"
+            android:hint="@string/contrasena2"
+            android:inputType="textPassword"
+            android:textColor="@color/fuente_logo"
+            android:textColorHint="@color/fuente_logo" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cumple"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/campo_digitar"
+        android:layout_marginEnd="25dp"
+        android:textColor="@color/fondo"
+        android:layout_marginTop="30dp"
+        android:textColorHint="@color/fuente_logo"
+        android:fontFamily="@font/inputs_fuente"
+        app:layout_constraintTop_toBottomOf="@id/ccontrasena2">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/cumple1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:background="@drawable/campo_digitar"
+            android:fontFamily="@font/inputs_fuente"
+            android:hint="@string/cumple"
+            android:inputType="date"
+            android:textColor="@color/fuente_logo"
+            android:textColorHint="@color/fuente_logo" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <Button
+        android:id="@+id/regis"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:backgroundTint="@null"
+        android:text="@string/registrarse"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:fontFamily="@font/inputs_fuente"
+        android:textSize="16sp"
+        android:textColor="@color/fondo"
+        android:background = "@drawable/boton_redondeado"
+        app:layout_constraintTop_toBottomOf="@id/cumple"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+
+    <ImageButton
+        android:id="@+id/snapchat"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/boton_redondeado"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/regis"
+        android:layout_marginStart="100dp"
+        android:src="@drawable/snapchat"
+        android:contentDescription="@string/descripcion_snapchat"
+        android:layout_marginTop="20dp"
+        />
+
+
+
+    <ImageButton
+        android:id="@+id/google"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/boton_redondeado"
+        app:layout_constraintStart_toEndOf="@id/snapchat"
+        app:layout_constraintTop_toBottomOf="@id/regis"
+        android:layout_marginStart="25dp"
+        android:src="@drawable/google"
+        android:contentDescription="@string/descripcion_google"
+        android:layout_marginTop="20dp"
+        />
+
+
+    <ImageButton
+        android:id="@+id/facebook"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/boton_redondeado"
+        app:layout_constraintStart_toEndOf="@id/google"
+        app:layout_constraintTop_toBottomOf="@id/regis"
+        android:layout_marginStart="25dp"
+        android:src="@drawable/facebook"
+        android:contentDescription="@string/descripcion_facebook"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/vscotyc"
+        android:textColor="@color/terminos_condiciones"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@id/regis"
+        app:layout_constraintTop_toBottomOf="@id/snapchat"
+        tools:ignore="SmallSp,TextSizeCheck,TextContrastCheck" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
