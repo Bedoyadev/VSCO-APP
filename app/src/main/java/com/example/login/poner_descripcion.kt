@@ -35,7 +35,7 @@ class poner_descripcion : Fragment() {
             uri?.let { uriSeleccionada = it }
         }
 
-    // --- Ciclo de vida del Fragment ---
+
 
     override fun onCreateView(
         inflater: LayoutInflater,

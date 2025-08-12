@@ -75,7 +75,7 @@ class registro : AppCompatActivity() {
                     binding.contra2.text.toString(),
                     binding.nomPerfil.text.toString()
                 )
-                // Inicia la Activity de login.
+
                 Toast.makeText(this, "Se ha registrado exitosamente", Toast.LENGTH_SHORT).show()
                 finish()
             }
