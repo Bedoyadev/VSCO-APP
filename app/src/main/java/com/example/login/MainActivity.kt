@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         registrarse()
     }
 
-
+    //Esta funcion sirve para verificar credenciales.
     fun verificar_credenciales() {
         val  correo = binding.email.text.toString()
         val  contrasena = binding.contrasena.text.toString()
