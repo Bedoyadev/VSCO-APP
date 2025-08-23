@@ -1,19 +1,21 @@
 package com.example.login
 
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.login.data.Credencial
+import com.example.login.data.retrofit
 import com.example.login.databinding.ActivityRegistroBinding
-import com.google.android.material.textfield.TextInputEditText
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 class registro : AppCompatActivity() {
@@ -47,7 +49,7 @@ class registro : AppCompatActivity() {
                     if (agnoSeleccionado > 2010) {
                         Toast.makeText(this, "El año seleccionado máximo es 2010", Toast.LENGTH_SHORT).show()
                     } else {
-                        binding.cumple1.setText("$diaSeleccionado/${mesSeleccionado + 1}/$agnoSeleccionado")
+                        binding.cumple1.setText(String.format("%02d/%02d/%04d", diaSeleccionado, mesSeleccionado + 1, agnoSeleccionado))
                     }
                 },
                 agno, mes, dia
@@ -59,28 +61,58 @@ class registro : AppCompatActivity() {
     }
 
 
+
     fun eventoRetroceder() {
         binding.retroceso.setOnClickListener {
             mostrarVentanaRetroceso()
         }
     }
 
+
+
+// ... (resto de tus imports y código de la clase)
+
     fun eventoRegistrarse() {
         binding.regis.setOnClickListener {
             val cuenta = validarCampos()
             if (cuenta == 4) {
-                // Agrega la credencial al objeto global.
-                Credenciales.agregarCredencial(
-                    binding.email1.text.toString(),
-                    binding.contra2.text.toString(),
-                    binding.nomPerfil.text.toString()
-                )
+                // Lanza una corrutina en un hilo de fondo (Dispatchers.IO) para la operación de red
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        val datos = Credencial(
+                            correo = binding.email1.text.toString(),
+                            usuario = binding.nomPerfil.text.toString(),
+                            contrasena = binding.contra2.text.toString(),
+                            cumple = binding.cumple1.text.toString()
+                        )
 
-                Toast.makeText(this, "Se ha registrado exitosamente", Toast.LENGTH_SHORT).show()
-                finish()
+                        val enviar = retrofit.api_flask.registro(datos)
+
+                        // Cambia al hilo principal (Dispatchers.Main) para actualizar la UI
+                        withContext(Dispatchers.Main) {
+                            if (enviar.isSuccessful) {
+                                Toast.makeText(this@registro, "Se ha registrado exitosamente", Toast.LENGTH_SHORT).show()
+                                finish()
+                            } else {
+                                Toast.makeText(this@registro, "Probablemente el correo ya se encuentra registrado. Vuelva a intentarlo", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        // Maneja errores de conexión (ej. sin internet)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@registro, "Error de conexión: ${e.message}", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
             }
         }
     }
+
+
+
+
+
+
 
     fun validarCampos(): Int {
         var contador = 0

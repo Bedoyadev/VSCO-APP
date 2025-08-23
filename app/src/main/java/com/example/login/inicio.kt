@@ -15,8 +15,8 @@ import com.example.login.adapter.Vscoadapter
 import com.example.login.databinding.ActivityInicioBinding
 import com.example.login.models.Vscoviewmodel
 import com.example.login.models.modelVsco
-import android.net.Uri
 import androidx.core.os.bundleOf
+import com.example.login.data.Credenciales
 
 class inicio : AppCompatActivity() {
     private lateinit var binding: ActivityInicioBinding
@@ -66,7 +66,7 @@ class inicio : AppCompatActivity() {
             insets
         }
 
-        val usuario_actual = Credenciales.usuarioActual?.usuario
+        val usuario_actual = Credenciales.usuarioActual?.nombre_user
         binding.NomUsuario.text = "Bienvenido, $usuario_actual!"
 
         // Inicializamos el RecyclerView y configuramos la observación de los datos

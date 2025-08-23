@@ -1,16 +1,21 @@
 package com.example.login
 
+
 import android.content.Intent
 import android.os.Bundle
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+
+import com.example.login.data.Credenciales
+import com.example.login.data.Datos_acceso
+import com.example.login.data.retrofit
 import com.example.login.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,45 +38,68 @@ class MainActivity : AppCompatActivity() {
     }
 
     //Esta funcion sirve para verificar credenciales.
-    fun verificar_credenciales() {
-        val  correo = binding.email.text.toString()
-        val  contrasena = binding.contrasena.text.toString()
+    suspend fun verificar_credenciales() {
+        val correo = binding.email.text.toString()
+        val contrasena = binding.contrasena.text.toString()
         if (correo.isEmpty()) {
-            Toast.makeText(this, "El campo de correo está vacío. Por favor digite su correo.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "El campo de correo está vacío. Por favor digite su correo.",
+                Toast.LENGTH_SHORT
+            ).show()
         } else if (contrasena.isEmpty()) {
             Toast.makeText(this, "El campo de contraseña está vacío.", Toast.LENGTH_SHORT).show()
-        } else {
-            // Buscar la credencial que coincida con el correo y contraseña ingresados
-            val credEncontrada = Credenciales.listaCredenciales.find {
-                it.correo == correo && it.contrasena == contrasena
+        }
+        try {
+                val datos = Datos_acceso(correo, contrasena)
+                val enviar = retrofit.api_flask.login(datos)
+
+                // Regresamos al hilo principal para actualizar la interfaz de usuario
+                lifecycleScope.launch(Dispatchers.Main) {
+                    if (enviar.isSuccessful) {
+                        enviar.body()?.let { usuario ->
+                            Credenciales.usuarioActual = usuario
+                            val intent = Intent(this@MainActivity, inicio::class.java)
+                            startActivity(intent)
+                        }
+                    } else {
+                        // Este 'else' maneja el caso de login fallido
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Correo o contraseña incorrecta",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        val intent = Intent(this@MainActivity, registro::class.java)
+                        startActivity(intent)
+                    }
+                }
+            } catch (e: Exception) {
+                lifecycleScope.launch(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Error de conexión: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
-            if (credEncontrada != null) {
-                // Asignamos el usuario actual en el objeto global
-                Credenciales.usuarioActual = credEncontrada
-                // Iniciamos la Activity "inicio" (donde se mostrará solo el nombre)
-                val intent = Intent(this, inicio::class.java)
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "Correo o contraseña incorrecta", Toast.LENGTH_SHORT).show()
-                // En caso de error, se redirige a la pantalla de registro
-                val intent = Intent(this, registro::class.java)
-                startActivity(intent)
+        }
+
+
+                fun evento_inciar_sesion() {
+                    binding.iniciarSesion.setOnClickListener {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            verificar_credenciales()
+                        }
+
+                    }
+                }
+
+                fun registrarse() {
+                    binding.registrarse.setOnClickListener {
+                        val click = Intent(this, registro::class.java)
+                        startActivity(click)
+                    }
+                }
+
+
             }
-        }
-    }
-
-    fun evento_inciar_sesion() {
-        binding.iniciarSesion.setOnClickListener {
-            verificar_credenciales()
-        }
-    }
-
-    fun registrarse() {
-        binding.registrarse.setOnClickListener {
-            val click = Intent(this, registro::class.java)
-            startActivity(click)
-        }
-    }
-
-
-}

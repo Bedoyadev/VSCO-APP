@@ -23,7 +23,7 @@ class Vscoviewmodel: ViewModel() {
         nuevaDescripcion: String,
         nuevaImagen: Uri
     ) {
-        // Obtener la lista actual de publicaciones
+
         val publicaciones = _datalistVsco.value ?: mutableListOf()
         val indiceEncontrado = publicaciones.indexOfFirst { publicacion ->
             publicacion == publicacion_original
