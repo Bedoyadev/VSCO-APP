@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.login.R
 import com.example.login.adapter.Vscoadapter.VscoViewHolder
 import com.example.login.databinding.ActivityReciclerBinding
@@ -37,7 +38,9 @@ class Vscoadapter(
         val binding = ActivityReciclerBinding.bind(view)
 
         fun inicializa(item: modelVsco) {
-            binding.imagenPublicacion.setImageURI(item.imagen)
+            Glide.with(binding.root.context)
+                .load(item.imagen) // 'item.imagen' ahora es un String
+                .into(binding.imagenPublicacion)
             binding.tituloPublicacion.text = item.titulo
             binding.descripcionPublicacion.text = item.descripcion
 

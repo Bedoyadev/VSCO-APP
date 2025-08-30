@@ -1,6 +1,7 @@
 package com.example.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
@@ -17,30 +18,20 @@ import com.example.login.models.Vscoviewmodel
 import com.example.login.models.modelVsco
 import androidx.core.os.bundleOf
 import com.example.login.data.Credenciales
+import com.example.login.data.retrofit
+import com.example.login.services.conexionservices
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class inicio : AppCompatActivity() {
     private lateinit var binding: ActivityInicioBinding
     private lateinit var vscoadapter: Vscoadapter // Declara el adapter como una variable de clase
     private val vscoviewmodel: Vscoviewmodel by viewModels()
 
-    // Este launcher es para cuando seleccionas una NUEVA imagen para una NUEVA publicación.
-    private val seleccionarImagenParaNuevaPublicacion =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                // Si se seleccionó una imagen, abrimos el fragmento para añadir la descripción
-                val fragmento = poner_descripcion().apply {
-                    arguments = bundleOf(
-                        "imagenUri" to uri.toString(),
-                        "esEditando" to false// Indicamos que es una nueva publicación
-                    )
-                }
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, fragmento)
-                    .addToBackStack(null) // 
-                    .commit()
-            }
-        }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +65,7 @@ class inicio : AppCompatActivity() {
         observarDatosViewModel()
         CerrarSesion()
         BotonAgregar()
+        listar_publicaciones()
 
     }
     private fun inicializarRecyclerView() {
@@ -97,12 +89,29 @@ class inicio : AppCompatActivity() {
         }
     }
 
+    private fun listar_publicaciones() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val call = retrofit.api_flask.consulta_publicaciones()
+                if (call.isSuccessful && call.body() != null) {
+                    withContext(Dispatchers.Main) {
+                        vscoviewmodel.agregarPublicaciones(call.body()!!.toMutableList())
+                    }
+
+                } else {
+                    Log.e("dap", "Error, no se encontro informacion")
+                }
+            } catch (e: Exception) {
+                Log.e("dap", "No se pudo conectar al backend")
+            }
+        }
+    }
     // Abre el fragmento 'poner_descripcion' en modo EDICIÓN
     private fun lanzarFragmentoEdicion(publicacion: modelVsco) {
         val fragmento = poner_descripcion().apply {
             arguments = bundleOf(
                 // Pasamos los datos de la publicación existente para que se precarguen en el fragmento
-                "imagenUri" to publicacion.imagen.toString(),
+                "imagenUri" to publicacion.imagen,
                 "titulo" to publicacion.titulo,
                 "descripcion" to publicacion.descripcion,
                 "Editando" to true // Indicamos que estamos editando
@@ -118,7 +127,7 @@ class inicio : AppCompatActivity() {
     private fun BotonAgregar() {
         binding.botonAgregar.setOnClickListener {
             // Lanza el selector de imágenes para elegir una foto para la nueva publicación
-            seleccionarImagenParaNuevaPublicacion.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            lanzarfragmento()
         }
     }
 
@@ -172,4 +181,13 @@ class inicio : AppCompatActivity() {
         binding.perfil.visibility = View.VISIBLE
         binding.spaces.visibility = View.VISIBLE
     }
+}
+
+private fun inicio.lanzarfragmento() {
+    val fragment = poner_descripcion()
+    supportFragmentManager.beginTransaction()
+        .replace(R.id.fragment_container, fragment)
+        .addToBackStack(null)
+        .commit()
+
 }

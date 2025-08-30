@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -23,19 +21,15 @@ class poner_descripcion : Fragment() {
     private var _binding: FragmentPonerDescripcionBinding? = null
     private val binding get() = _binding!!
     private val viewModel: Vscoviewmodel by activityViewModels()
-    private var imagenOriginal: Uri? = null
+    private var imagenOriginal: String? = null
     private var tituloOriginal: String? = null
     private var descripcionOriginal: String? = null
     private var modoEdicion: Boolean = false
-    private var uriSeleccionada: Uri? = imagenOriginal
+
 
     // Lanza la selección de imagen
-    private val nuevaImagen =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            uri?.let { uriSeleccionada = it }
-        }
 
-
+    // --- Ciclo de vida del Fragment ---
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,7 +61,7 @@ class poner_descripcion : Fragment() {
 
             if (modoedicion && imageUriString != null && titulo != null && descripcion != null) {
                 modoEdicion = true
-                imagenOriginal = imageUriString.toUri()
+                imagenOriginal = imageUriString
                 tituloOriginal = titulo
                 descripcionOriginal = descripcion
 
@@ -78,7 +72,7 @@ class poner_descripcion : Fragment() {
                 binding.etiqueta.setText(titulo)
                 binding.subirImagen.text = "Guardar Cambios"
             } else if (imageUriString != null) {
-                imagenOriginal = imageUriString.toUri()
+                imagenOriginal = imageUriString
                 binding.subirImagen.text = "Subir"
             }
         }
@@ -101,13 +95,7 @@ class poner_descripcion : Fragment() {
             mostrarVentanaDescartar()
         }
 
-        binding.cambiarImagenButton.setOnClickListener {
-            nuevaImagen.launch(
-                PickVisualMediaRequest(
-                    ActivityResultContracts.PickVisualMedia.ImageOnly
-                )
-            )
-        }
+
 
         binding.subirImagen.setOnClickListener {
             editar()
@@ -134,7 +122,7 @@ class poner_descripcion : Fragment() {
     fun editar() {
         val nuevoTitulo = binding.tituloImagen1.text.toString()
         val nuevaDescripcion = binding.descripcion1.text.toString()
-        val uriParaActualizar = uriSeleccionada ?: imagenOriginal
+        val uriParaActualizar = binding.imagen1.text.toString()
 
         // Validar longitud de título
         if (nuevoTitulo.length > 20) {
@@ -146,14 +134,12 @@ class poner_descripcion : Fragment() {
         }
 
         if (modoEdicion) {
-            // Editar publicación existente
-            val publicacion_origi = modelVsco(imagenOriginal!!,tituloOriginal!!,descripcionOriginal!!)
+            val publicacion_original = modelVsco(imagenOriginal!!, tituloOriginal!!, descripcionOriginal!!)
             if (imagenOriginal != null && tituloOriginal != null && descripcionOriginal != null) {
-                viewModel.editar(
-                   publicacion_origi,
+                viewModel.editar(publicacion_original,
                     nuevoTitulo = nuevoTitulo,
                     nuevaDescripcion = nuevaDescripcion,
-                    nuevaImagen = uriParaActualizar!!
+                    nuevaImagen = uriParaActualizar
                 )
             }
         } else {
@@ -169,13 +155,13 @@ class poner_descripcion : Fragment() {
     private fun eliminar() {
         if (modoEdicion)
 
-        if (imagenOriginal != null && tituloOriginal != null && descripcionOriginal != null) {
-            viewModel.eliminarPublicacion(
-                imagen = imagenOriginal!!,
-                titulo = tituloOriginal!!,
-                descripcion = descripcionOriginal!!
-            )
-        }
+            if (imagenOriginal != null && tituloOriginal != null && descripcionOriginal != null) {
+                viewModel.eliminarPublicacion(
+                    imagen = imagenOriginal!!,
+                    titulo = tituloOriginal!!,
+                    descripcion = descripcionOriginal!!
+                )
+            }
     }
 
 }

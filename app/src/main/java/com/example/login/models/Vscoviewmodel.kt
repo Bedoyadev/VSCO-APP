@@ -17,11 +17,17 @@ class Vscoviewmodel: ViewModel() {
         _datalistVsco.postValue(lista)
     }
 
+    fun agregarPublicaciones(publicaciones: MutableList<modelVsco>) {
+        val lista = _datalistVsco.value ?: mutableListOf()
+        lista.addAll(publicaciones)
+        _datalistVsco.postValue(lista)
+    }
+
     fun editar(
         publicacion_original: modelVsco,
         nuevoTitulo: String,
         nuevaDescripcion: String,
-        nuevaImagen: Uri
+        nuevaImagen: String
     ) {
 
         val publicaciones = _datalistVsco.value ?: mutableListOf()
@@ -42,7 +48,7 @@ class Vscoviewmodel: ViewModel() {
         }
     }
     fun eliminarPublicacion(
-        imagen: Uri,
+        imagen: String,
         titulo: String,
         descripcion: String
     ) {

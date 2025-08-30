@@ -45,5 +45,6 @@
     <string name="foto_publicacion">Foto publicacion</string>
     <string name="cambiar_imagen">cambio de imagen\n</string>
     <string name="eliminar">eliminar\n</string>
+    <string name="url_de_la_foto">URL de la foto</string>
 
 </resources>

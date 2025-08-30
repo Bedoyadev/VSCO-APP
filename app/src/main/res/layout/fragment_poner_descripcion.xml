@@ -89,7 +89,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="250dp"
             android:id="@+id/descripcion"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -105,8 +105,9 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/descripcion1"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="250dp"
                 android:textSize="18sp"
+                android:maxLength="10000"
                 android:background="@drawable/campo_digitar"
                 android:fontFamily="@font/inputs_fuente"
                 android:hint="@string/descripcion"
@@ -115,6 +116,36 @@
                 android:textColor="@color/fuente_logo"
                 android:textColorHint="@color/fuente_logo" />
         </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imagen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/descripcion"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/campo_digitar"
+        android:layout_marginEnd="25dp"
+        android:textColor="@color/fondo"
+        android:layout_marginTop="20dp"
+        android:textColorHint="@color/fuente_logo"
+        android:fontFamily="@font/inputs_fuente">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/imagen1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:maxLength="10000"
+            android:background="@drawable/campo_digitar"
+            android:fontFamily="@font/inputs_fuente"
+            android:hint="@string/url_de_la_foto"
+            android:gravity="center"
+            android:inputType="textMultiLine"
+            android:textColor="@color/fuente_logo"
+            android:textColorHint="@color/fuente_logo" />
+    </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/cambiarImagenButton"
@@ -127,10 +158,10 @@
             android:fontFamily="@font/inputs_fuente"
             android:textSize="16sp"
             app:backgroundTint="@null"
-            app:layout_constraintTop_toBottomOf="@id/descripcion"
+            app:layout_constraintTop_toBottomOf="@id/imagen"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="40dp" />
         <Button
             android:id="@+id/subir_imagen"
             android:layout_width="match_parent"
@@ -143,7 +174,7 @@
             android:textSize="18sp"
             android:textColor="@color/fondo"
             android:background = "@drawable/boton_redondeado"
-            app:layout_constraintTop_toBottomOf="@id/cambiarImagenButton" android:layout_marginTop="20dp" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imagen" android:layout_marginTop="40dp" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
 
