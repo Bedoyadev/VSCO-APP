@@ -1,5 +1,6 @@
 
 
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -52,10 +53,16 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation("androidx.fragment:fragment-ktx:1.8.8")
     implementation(libs.material.v1140alpha01)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.volley)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.androidx.activity.ktx)
+    implementation("com.android.volley:volley:1.1.1")
     val messi = 1
+
+
 
 }

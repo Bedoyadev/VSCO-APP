@@ -146,25 +146,26 @@
             android:textColor="@color/fuente_logo"
             android:textColorHint="@color/fuente_logo" />
     </com.google.android.material.textfield.TextInputLayout>
+
+
     <Button
         android:id="@+id/regis"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:backgroundTint="@null"
-        android:text="@string/registrarse"
         android:layout_marginStart="25dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="25dp"
+        android:background="@drawable/boton_redondeado"
         android:fontFamily="@font/inputs_fuente"
-        android:textSize="16sp"
+        android:onClick="clickBtnInsertar"
+        android:text="@string/registrarse"
         android:textColor="@color/fondo"
-        android:background = "@drawable/boton_redondeado"
-        app:layout_constraintTop_toBottomOf="@id/cumple"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
-        />
-
-
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cumple" />
 
     <ImageButton
         android:id="@+id/snapchat"
