@@ -9,7 +9,11 @@ data class Datos_acceso(val correo: String, val contrasena: String)
 
 data class Registro(val resultado: Boolean)
 
-data class nueva_publicacion (val photo_url: String)
+data class nueva_publicacion (val url: String)
+
+data class Correo (val correo: String)
+
+
 
 data class  Nombre_usuario(@SerializedName("nombre") val nombre_user:String)
 

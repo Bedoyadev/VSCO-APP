@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                         enviar.body()?.let { usuario ->
                             Credenciales.usuarioActual = usuario
                             val intent = Intent(this@MainActivity, inicio::class.java)
+                            intent.putExtra("correo", correo)
                             startActivity(intent)
                         }
                     } else {

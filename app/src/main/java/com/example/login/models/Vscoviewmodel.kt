@@ -1,8 +1,10 @@
 package com.example.login.models
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.net.Uri
+import com.example.login.data.nueva_publicacion
+
 
 class Vscoviewmodel: ViewModel() {
     private val _datalistVsco: MutableLiveData<MutableList<modelVsco>> =
@@ -25,39 +27,27 @@ class Vscoviewmodel: ViewModel() {
 
     fun editar(
         publicacion_original: modelVsco,
-        nuevoTitulo: String,
-        nuevaDescripcion: String,
-        nuevaImagen: String
+        nuevaPublicacion: modelVsco
     ) {
 
         val publicaciones = _datalistVsco.value ?: mutableListOf()
         val indiceEncontrado = publicaciones.indexOfFirst { publicacion ->
-            publicacion == publicacion_original
+            publicacion.id == publicacion_original.id
         }
 
         // Si encontramos una coincidencia, actualizamos la publicación el menos -1 es para verficar que se encontro una publicacion
         if (indiceEncontrado != -1) {
-            val actualizarPublicacion = modelVsco(
-                imagen = nuevaImagen,
-                titulo = nuevoTitulo,
-                descripcion = nuevaDescripcion
-            )
-
-            publicaciones[indiceEncontrado] = actualizarPublicacion
+            publicaciones[indiceEncontrado] = nuevaPublicacion
             _datalistVsco.postValue(publicaciones) // Notificar a los observadores (RecyclerView, etc.)
         }
     }
     fun eliminarPublicacion(
-        imagen: String,
-        titulo: String,
-        descripcion: String
+        id_publi: Int
     ) {
         val publicaciones = _datalistVsco.value ?: mutableListOf()
-
+        Log.d("DEBUG_ELIMINAR", "Indice encontrado: $id_publi")
         val indiceAEliminar = publicaciones.indexOfFirst { publicacion ->
-            publicacion.imagen == imagen &&
-                    publicacion.titulo == titulo &&
-                    publicacion.descripcion == descripcion
+            publicacion.id == id_publi
         }
 
         if (indiceAEliminar != -1) {

@@ -1,8 +1,5 @@
 package com.example.login.models
 
-import android.net.Uri
 
-
-
-data class modelVsco (var imagen: String, var titulo: String, var descripcion: String)
+data class modelVsco (var id: Int?, var imagen: String, var titulo: String, var descripcion: String, var correo: String)
 
