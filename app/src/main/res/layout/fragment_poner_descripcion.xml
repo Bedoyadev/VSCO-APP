@@ -143,7 +143,7 @@
             android:fontFamily="@font/inputs_fuente"
             android:hint="@string/url_de_la_foto"
             android:gravity="center"
-            android:inputType="textMultiLine"
+            android:inputType="textUri"
             android:textColor="@color/fuente_logo"
             android:textColorHint="@color/fuente_logo" />
     </com.google.android.material.textfield.TextInputLayout>

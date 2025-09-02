@@ -91,6 +91,7 @@ class inicio : AppCompatActivity() {
         }
     }
 
+
     private fun listar_publicaciones() {
         val correo = intent.getStringExtra("correo") ?: return
         val correo1 = Correo(correo)

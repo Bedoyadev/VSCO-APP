@@ -2,6 +2,7 @@ package com.example.login
 
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 
 import android.view.LayoutInflater
 import android.view.View
@@ -94,9 +95,11 @@ class poner_descripcion : Fragment() {
                 .setMessage("¿Estás seguro que desea eliminar esta publicación?")
                 .setPositiveButton("Sí") { _, _ ->
                     lifecycleScope.launch {
-                        eliminar() // Espera a que termine
-                        parentFragmentManager.popBackStack() // Solo después de eliminar
+                        eliminar()
+                        parentFragmentManager.popBackStack() // Espera a que termine
+                        // Solo después de eliminar
                     }
+
                 }
                 .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
                 .show()
@@ -112,8 +115,11 @@ class poner_descripcion : Fragment() {
 
         binding.subirImagen.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
-                editar()
-                parentFragmentManager.popBackStack()
+                var validaciones = validar_campos()
+                if (validaciones == 2) {
+                    editar()
+                    parentFragmentManager.popBackStack()
+                }
             }
         }
     }
@@ -141,87 +147,113 @@ class poner_descripcion : Fragment() {
         val correo = arguments?.getString("correo")!!
 
         // Validar longitud de título
-        if (nuevoTitulo.length > 20) {
-            Toast.makeText(
-                requireContext(),
-                "El titulo puede tener un maximo de 20 caracteres",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        if (uriParaActualizar.isEmpty()) {
-            withContext(Dispatchers.Main) {
-                Toast.makeText(requireContext(), "Falta la imagen", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        if (modoEdicion) {
-            if (uriParaActualizar == "") {
-                uriParaActualizar = imagenOriginal!!
-                if (nuevoTitulo == "")
-                    nuevoTitulo = tituloOriginal!!
-                if (nuevaDescripcion == "")
-                    nuevaDescripcion = descripcionOriginal!!
+            if (modoEdicion) {
+                if (uriParaActualizar == "") {
+                    uriParaActualizar = imagenOriginal!!
+                    if (nuevoTitulo == "")
+                        nuevoTitulo = tituloOriginal!!
+                    if (nuevaDescripcion == "")
+                        nuevaDescripcion = descripcionOriginal!!
                 }
-            Log.d("DEBUG_ID", "ID ediccion: ${id_publicacion}")
+                Log.d("DEBUG_ID", "ID ediccion: ${id_publicacion}")
 
-            // Crear el objeto con los datos actualizados
-            val publicacionActualizada =
-                modelVsco(id_publicacion, uriParaActualizar, nuevoTitulo, nuevaDescripcion, correo)
-
-            // Enviar la solicitud de actualización
-            val response = retrofit.api_flask.actualizar_publicacion(publicacionActualizada)
-
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    // Notificar al ViewModel para actualizar el estado
-                    val publicacion_original = modelVsco(
+                // Crear el objeto con los datos actualizados
+                val publicacionActualizada =
+                    modelVsco(
                         id_publicacion,
-                        imagenOriginal!!,
-                        tituloOriginal!!,
-                        descripcionOriginal!!,
+                        uriParaActualizar,
+                        nuevoTitulo,
+                        nuevaDescripcion,
                         correo
                     )
-                    viewModel.editar(publicacion_original, publicacionActualizada)
-                    Toast.makeText(
-                        requireContext(),
-                        "Publicación actualizada con éxito",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
+                // Enviar la solicitud de actualización
+                val response = retrofit.api_flask.actualizar_publicacion(publicacionActualizada)
+
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        // Notificar al ViewModel para actualizar el estado
+                        val publicacion_original = modelVsco(
+                            id_publicacion,
+                            imagenOriginal!!,
+                            tituloOriginal!!,
+                            descripcionOriginal!!,
+                            correo
+                        )
+                        viewModel.editar(publicacion_original, publicacionActualizada)
+                        Toast.makeText(
+                            requireContext(),
+                            "Publicación actualizada con éxito",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        Log.e(
+                            "API_ERROR",
+                            "Error de actualización: ${response.code()}, Mensaje: $errorBody"
+                        )
+                        Toast.makeText(
+                            requireContext(),
+                            "Error al actualizar la publicación.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            } else {
+
+                val nuevaPublicacion = modelVsco(
+                    id = null,
+                    imagen = uriParaActualizar,
+                    titulo = nuevoTitulo,
+                    descripcion = nuevaDescripcion,
+                    correo = correo
+                )
+
+                val enviar = retrofit.api_flask.insertar_publicacion(nuevaPublicacion)
+
+                if (enviar.isSuccessful && enviar.body() != null) {
+                    // El backend devuelve solo el id como Int
+                    val idGenerado = enviar.body() // Si Retrofit ya lo infiere como Int
+                    nuevaPublicacion.id = idGenerado
+                    viewModel.agregarPublicacion(nuevaPublicacion)
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    Log.e(
-                        "API_ERROR",
-                        "Error de actualización: ${response.code()}, Mensaje: $errorBody"
-                    )
-                    Toast.makeText(
-                        requireContext(),
-                        "Error al actualizar la publicación.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Log.e("API_ERROR", "Error al insertar publicación: ${enviar.code()}")
                 }
             }
-        }else {
+        }
 
-            val nuevaPublicacion = modelVsco(
-                id = null,
-                imagen = uriParaActualizar,
-                titulo = nuevoTitulo,
-                descripcion = nuevaDescripcion,
-                correo = correo
-            )
-
-            val enviar = retrofit.api_flask.insertar_publicacion(nuevaPublicacion)
-
-            if (enviar.isSuccessful && enviar.body() != null) {
-                // El backend devuelve solo el id como Int
-                val idGenerado = enviar.body() // Si Retrofit ya lo infiere como Int
-                nuevaPublicacion.id = idGenerado
-                viewModel.agregarPublicacion(nuevaPublicacion)
-            } else {
-                Log.e("API_ERROR", "Error al insertar publicación: ${enviar.code()}")
-            }
+    suspend private fun validar_campos(): Int {
+        var contador: Int = 0
+        var nuevoTitulo = binding.tituloImagen1.text.toString()
+        var uriParaActualizar = binding.imagen1.text.toString()
+        if (nuevoTitulo.isEmpty()) {
+            withContext(Dispatchers.Main){
+            Toast.makeText(
+                requireContext(),
+                "El campo del titulo no puede estar vacio",
+                Toast.LENGTH_SHORT
+            ).show()
+        } }else {
+            contador++
+        }
+        if (uriParaActualizar.isEmpty()){
+            withContext(Dispatchers.Main){
+            Toast.makeText(requireContext(), "EL campo de la url no puede estar vacio", Toast.LENGTH_SHORT).show()
+        }}else if(!Patterns.WEB_URL.matcher(uriParaActualizar).matches()) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    requireContext(),
+                    "El texto digitado no es una url",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
+        else{
+            contador ++
+        }
+        return contador
+    }
+
 
 
     /*
