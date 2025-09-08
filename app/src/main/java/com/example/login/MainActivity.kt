@@ -51,12 +51,21 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "El campo de contraseña está vacío.", Toast.LENGTH_SHORT).show()
         }
         try {
+            //la variable datos guarda los datos de correo y contraseña, en el formato de la data class Datos_acceso,
                 val datos = Datos_acceso(correo, contrasena)
+            /*la variable enviar contiene el resultado de login, es una funcion que realiza una peticion
+            para enviar datos al servidor, y nos permitira verificar si el usuario y la contraseña existe
+            en la base de datos.
+             */
                 val enviar = retrofit.api_flask.login(datos)
 
-                // Regresamos al hilo principal para actualizar la interfaz de usuario
+                /* 2. Una vez haciendo la tarea pesada que es la peticion al servidor le indicamos a la app que queremos cambiar
+                hilo al principal debido a que ahora necesitamos o pasar a la siguiente activity, o mostrar un toast, y eso
+                solamente se puede hacer desde el hilo principal.
+                 */
                 lifecycleScope.launch(Dispatchers.Main) {
                     if (enviar.isSuccessful) {
+                        //solo se ejecuta si enviar.body no es null para eso esta el signo de interrogacion.
                         enviar.body()?.let { usuario ->
                             Credenciales.usuarioActual = usuario
                             val intent = Intent(this@MainActivity, inicio::class.java)
@@ -88,6 +97,10 @@ class MainActivity : AppCompatActivity() {
 
                 fun evento_inciar_sesion() {
                     binding.iniciarSesion.setOnClickListener {
+                        /* 1. Cuando el usuario le de click a iniciar sesion, le pediremos al sistema que el proceso que va a
+                        realizar lo haga en segundo plano, esto debido a que vamos a hacer peticiones al servidor de flask
+                        son tareas pesadas que pueden crashear la app.
+                         */
                         lifecycleScope.launch(Dispatchers.IO) {
                             verificar_credenciales()
                         }

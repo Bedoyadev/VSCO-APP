@@ -150,7 +150,6 @@ class inicio : AppCompatActivity() {
 
     private fun BotonAgregar() {
         binding.botonAgregar.setOnClickListener {
-            // Lanza el selector de imágenes para elegir una foto para la nueva publicación
             lanzarfragmento()
         }
     }

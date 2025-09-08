@@ -24,7 +24,7 @@ import retrofit2.http.Path
 interface conexionservices {
 
     companion object{
-        val url: String = "http://192.168.0.103:5000"
+        val url: String = "http://192.168.18.162:5000"
     }
 
     @POST("/login") // La ruta de tu API de Flask
